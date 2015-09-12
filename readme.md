@@ -17,4 +17,4 @@ And generate the documentation
 
 ###License###
 
-[Microsoft Public License (Ms-PL)](http://www.microsoft.com/en-us/openness/licenses.aspx#MPL)
+[Microsoft Public License (Ms-PL)](https://opensource.org/licenses/MS-PL)
