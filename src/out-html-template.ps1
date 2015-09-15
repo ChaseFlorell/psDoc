@@ -8,7 +8,7 @@
   <description>
     If you'd like to regenerate the documentation, please open up powershell and run
             
-        > .\build.ps1 docs
+        > .\psDoc.ps1 -moduleName NameOfYourModule
                 
     If the documentation is incomplete, or eronious, 
     please edit the comments at the top of the module method within it's respecive .ps1 file.        
