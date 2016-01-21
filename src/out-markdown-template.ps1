@@ -77,6 +77,7 @@ $(FixString($synopsis))
 @"
 ### Inputs
  - $inputTypes
+
 "@
 	}
     $returnValues = $(FixString($_.returnValues  | out-string))
@@ -84,6 +85,7 @@ $(FixString($synopsis))
 @"
 ### Outputs
  - $returnValues
+
 "@
 	}
     $notes = $(FixString($_.alertSet  | out-string))
@@ -91,6 +93,7 @@ $(FixString($synopsis))
 @"
 ### Note
 $notes
+
 "@
 	}
 	if(($_.examples | Out-String).Trim().Length -gt 0) {
