@@ -51,7 +51,7 @@ foreach ($h in $commandsHelp){
 
 # Create the output directory if it does not exist
 if (-Not (Test-Path $outputDir)) {
-    New-Item -Path $outputDir -ItemType Directory
+    New-Item -Path $outputDir -ItemType Directory | Out-Null
 }
 
 $totalCommands = $commandsHelp.Count
