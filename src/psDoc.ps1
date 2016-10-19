@@ -55,5 +55,9 @@ if (-Not (Test-Path $outputDir)) {
 }
 
 $totalCommands = $commandsHelp.Count
+if (!$totalCommands)
+{
+    $totalCommands = 1
+}
 $template = Get-Content $template -raw -force
 Invoke-Expression $template > "$outputDir\$fileName"
