@@ -1,3 +1,53 @@
+function TrimAllLines([string] $str) {
+	$lines = $str -split "`n"
+
+	for ($i = 0; $i -lt $lines.Count; $i++) {
+		$lines[$i] = $lines[$i].Trim()
+	}
+
+	# Trim EOL.
+	($lines | Out-String).Trim()
+}
+
+function FixMarkdownString([string] $in = '', [bool] $includeBreaks = $false) {
+	if ($in -eq $null) { return }
+
+	$replacements = @{
+		'\' = '\\'
+		'`' = '\`'
+		'*' = '\*'
+		'_' = '\_'
+		'{' = '\{'
+		'}' = '\}'
+		'[' = '\['
+		']' = '\]'
+		'(' = '\('
+		')' = '\)'
+		'#' = '\#'
+		'+' = '\+'
+		'!' = '\!'
+	}
+
+	$rtn = $in.Trim()
+	foreach ($key in $replacements.Keys) {
+		$rtn = $rtn.Replace($key, $replacements[$key])
+	}
+
+	$rtn = TrimAllLines $rtn
+
+	if ($includeBreaks) {
+		$crlf = [Environment]::NewLine
+		$rtn = $rtn.Replace($crlf, "  $crlf")
+	}
+	$rtn
+}
+
+function FixMarkdownCodeString([string] $in) {
+	if ($in -eq $null) { return }
+	
+	TrimAllLines $in
+}
+
 @"
 # $moduleName
 "@
@@ -6,7 +56,7 @@ $commandsHelp | % {
 	Update-Progress $_.Name 'Documentation'
 	$progress++
 @"
-## $(FixString($_.Name))
+## $(FixMarkdownString($_.Name))
 "@
 	$synopsis = $_.synopsis.Trim()
 	$syntax = $_.syntax | out-string
@@ -16,12 +66,12 @@ $commandsHelp | % {
 		$syntax = $tmp
 @"	
 ### Synopsis
-$(FixString($syntax))
+$(FixMarkdownString($syntax))
 "@
 	}
 @"	
 ### Syntax
-$(FixString($synopsis))
+$(FixMarkdownString($synopsis))
 "@	
 
 	if (!($_.alias.Length -eq 0)) {
@@ -38,7 +88,7 @@ $(FixString($synopsis))
 "@
 	}
 	
-    if($_.parameters){
+	if($_.parameters){
 @"
 ### Parameters
 
@@ -55,41 +105,41 @@ $(FixString($synopsis))
 	</thead>
 	<tbody>
 "@
-        $_.parameters.parameter | % {
+		$_.parameters.parameter | % {
 @"
 		<tr>
-			<td><nobr>$(FixString($_.Name))</nobr></td>
-			<td class="visible-lg visible-md">$(FixString($_.Aliases))</td>
-			<td>$(FixString(($_.Description  | out-string).Trim()) $true)</td>
-			<td class="visible-lg visible-md">$(FixString($_.Required))</td>
-			<td class="visible-lg">$(FixString($_.PipelineInput))</td>
-			<td class="visible-lg">$(FixString($_.DefaultValue))</td>
+			<td><nobr>$(FixMarkdownString($_.Name))</nobr></td>
+			<td class="visible-lg visible-md">$(FixMarkdownString($_.Aliases))</td>
+			<td>$(FixMarkdownString(($_.Description  | out-string).Trim()) $true)</td>
+			<td class="visible-lg visible-md">$(FixMarkdownString($_.Required))</td>
+			<td class="visible-lg">$(FixMarkdownString($_.PipelineInput))</td>
+			<td class="visible-lg">$(FixMarkdownString($_.DefaultValue))</td>
 		</tr>
 "@
-        }
+		}
 @"
 	</tbody>
 </table>			
 "@
-    }
-    $inputTypes = $(FixString($_.inputTypes  | out-string))
-    if ($inputTypes.Length -gt 0 -and -not $inputTypes.Contains('inputType')) {
+	}
+	$inputTypes = $(FixMarkdownString($_.inputTypes  | out-string))
+	if ($inputTypes.Length -gt 0 -and -not $inputTypes.Contains('inputType')) {
 @"
 ### Inputs
  - $inputTypes
 
 "@
 	}
-    $returnValues = $(FixString($_.returnValues  | out-string))
-    if ($returnValues.Length -gt 0 -and -not $returnValues.StartsWith("returnValue")) {
+	$returnValues = $(FixMarkdownString($_.returnValues  | out-string))
+	if ($returnValues.Length -gt 0 -and -not $returnValues.StartsWith("returnValue")) {
 @"
 ### Outputs
  - $returnValues
 
 "@
 	}
-    $notes = $(FixString($_.alertSet  | out-string))
-    if ($notes.Trim().Length -gt 0) {
+	$notes = $(FixMarkdownString($_.alertSet  | out-string))
+	if ($notes.Trim().Length -gt 0) {
 @"
 ### Note
 $notes
@@ -102,11 +152,11 @@ $notes
 "@
 		$_.examples.example | % {
 @"
-**$(FixString($_.title.Trim(('-',' '))))**
+**$(FixMarkdownString($_.title.Trim(('-',' '))))**
 
-		$(FixString($_.code | out-string ))
+		$(FixMarkdownCodeString($_.code | out-string ))
 		
-$(FixString($_.remarks | out-string ))
+$(FixMarkdownString($_.remarks | out-string ) $true)
 "@
 		}
 	}
