@@ -1,4 +1,4 @@
-function FixMarkdownString($in = '', [bool]$includeBreaks = $false) {
+function FixMarkdownString([string] $in = '', [bool]$includeBreaks = $false) {
 	if ($in -eq $null) { return }
 
 	$replacements = @{
@@ -17,15 +17,20 @@ function FixMarkdownString($in = '', [bool]$includeBreaks = $false) {
 		'!' = '\!'
 	}
 
-	$rtn = $in
+	$rtn = $in.Trim()
 	foreach ($key in $replacements.Keys) {
 		$rtn = $rtn.Replace($key, $replacements[$key])
 	}
 
-	if($includeBreaks){
+	if($includeBreaks) {
 		$rtn = $rtn.Replace([Environment]::NewLine, "  `n")
 	}
-	return $rtn
+	$rtn
+}
+
+function FixMarkdownCodeString([string] $in) {
+	if ($in -eq $null) { return }
+	$in.Trim()
 }
 
 @"
@@ -134,9 +139,9 @@ $notes
 @"
 **$(FixMarkdownString($_.title.Trim(('-',' '))))**
 
-		$(FixMarkdownString($_.code | out-string ))
+		$(FixMarkdownCodeString($_.code | out-string ))
 		
-$(FixMarkdownString($_.remarks | out-string ))
+$(FixMarkdownString($_.remarks | out-string ) $true)
 "@
 		}
 	}
