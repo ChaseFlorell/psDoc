@@ -14,8 +14,6 @@ function FixMarkdownString($in = '', [bool]$includeBreaks = $false) {
 		')' = '\)'
 		'#' = '\#'
 		'+' = '\+'
-		'-' = '\-'
-		'.' = '\.'
 		'!' = '\!'
 	}
 
