@@ -36,7 +36,8 @@ function FixMarkdownString([string] $in = '', [bool] $includeBreaks = $false) {
 	$rtn = TrimAllLines $rtn
 
 	if ($includeBreaks) {
-		$rtn = $rtn.Replace([Environment]::NewLine, "  `n")
+		$crlf = [Environment]::NewLine
+		$rtn = $rtn.Replace($crlf, "  $crlf")
 	}
 	$rtn
 }
