@@ -1,3 +1,13 @@
+function TrimAllLines([string] $str) {
+	$lines = $str -split "`n"
+
+	for ($i = 0; $i -lt $lines.Count; $i++) {
+		$lines[$i] = $lines[$i].Trim()
+	}
+
+	$lines | Out-String | Write-Output
+}
+
 function FixMarkdownString([string] $in = '', [bool]$includeBreaks = $false) {
 	if ($in -eq $null) { return }
 
@@ -25,12 +35,13 @@ function FixMarkdownString([string] $in = '', [bool]$includeBreaks = $false) {
 	if($includeBreaks) {
 		$rtn = $rtn.Replace([Environment]::NewLine, "  `n")
 	}
-	$rtn
+	TrimAllLines $rtn
 }
 
 function FixMarkdownCodeString([string] $in) {
 	if ($in -eq $null) { return }
-	$in.Trim()
+	
+	TrimAllLines $in
 }
 
 @"
