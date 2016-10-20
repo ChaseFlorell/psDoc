@@ -9,7 +9,7 @@ function TrimAllLines([string] $str) {
 	($lines | Out-String).Trim()
 }
 
-function FixMarkdownString([string] $in = '', [bool]$includeBreaks = $false) {
+function FixMarkdownString([string] $in = '', [bool] $includeBreaks = $false) {
 	if ($in -eq $null) { return }
 
 	$replacements = @{
@@ -33,10 +33,12 @@ function FixMarkdownString([string] $in = '', [bool]$includeBreaks = $false) {
 		$rtn = $rtn.Replace($key, $replacements[$key])
 	}
 
+	$rtn = TrimAllLines $rtn
+
 	if ($includeBreaks) {
 		$rtn = $rtn.Replace([Environment]::NewLine, "  `n")
 	}
-	TrimAllLines $rtn
+	$rtn
 }
 
 function FixMarkdownCodeString([string] $in) {
