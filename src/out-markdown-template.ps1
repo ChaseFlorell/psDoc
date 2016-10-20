@@ -5,7 +5,8 @@ function TrimAllLines([string] $str) {
 		$lines[$i] = $lines[$i].Trim()
 	}
 
-	$lines | Out-String | Write-Output
+	# Trim EOL.
+	($lines | Out-String).Trim()
 }
 
 function FixMarkdownString([string] $in = '', [bool]$includeBreaks = $false) {
@@ -32,7 +33,7 @@ function FixMarkdownString([string] $in = '', [bool]$includeBreaks = $false) {
 		$rtn = $rtn.Replace($key, $replacements[$key])
 	}
 
-	if($includeBreaks) {
+	if ($includeBreaks) {
 		$rtn = $rtn.Replace([Environment]::NewLine, "  `n")
 	}
 	TrimAllLines $rtn
