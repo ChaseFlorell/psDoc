@@ -174,7 +174,7 @@ h3. Links
 "@
 		$_.links | % { 
 @"
- - [$_.name]($_.link) 
+ - [$($_.name)|$($_.link)]
 "@
 		}
 	}
