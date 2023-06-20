@@ -19,6 +19,11 @@ function FixString ($in = '', [bool]$includeBreaks = $false){
 function Update-Progress($name, $action){
     Write-Progress -Activity "Rendering $action for $name" -CurrentOperation "Completed $progress of $totalCommands." -PercentComplete $(($progress/$totalCommands)*100)
 }
+
+function Convert-MdToHtml ($unfixedString){
+    $(ConvertFrom-Markdown -InputObject (FixString(($unfixedString | out-string).Trim())) | Select-Object -exp html)
+}
+
 $i = 0
 $commandsHelp = (Get-Command -module $moduleName) | get-help -full | Where-Object {! $_.name.EndsWith('.ps1')}
 
